@@ -1,0 +1,17 @@
+C:\Users\USUARIO\git\pid_20246__miercoles_grupo_02_parte1\src\main\java\com\gestion\tasking\controller\AuthController.java
+C:\Users\USUARIO\git\pid_20246__miercoles_grupo_02_parte1\src\main\java\com\gestion\tasking\controller\TareaController.java
+C:\Users\USUARIO\git\pid_20246__miercoles_grupo_02_parte1\src\main\java\com\gestion\tasking\controller\UserController.java
+C:\Users\USUARIO\git\pid_20246__miercoles_grupo_02_parte1\src\main\java\com\gestion\tasking\DAO\TareaDAO.java
+C:\Users\USUARIO\git\pid_20246__miercoles_grupo_02_parte1\src\main\java\com\gestion\tasking\DAO\TareaDAOImpl.java
+C:\Users\USUARIO\git\pid_20246__miercoles_grupo_02_parte1\src\main\java\com\gestion\tasking\DAO\UserDAO.java
+C:\Users\USUARIO\git\pid_20246__miercoles_grupo_02_parte1\src\main\java\com\gestion\tasking\DAO\UserDAOImpl.java
+C:\Users\USUARIO\git\pid_20246__miercoles_grupo_02_parte1\src\main\java\com\gestion\tasking\entity\Tarea.java
+C:\Users\USUARIO\git\pid_20246__miercoles_grupo_02_parte1\src\main\java\com\gestion\tasking\entity\User.java
+C:\Users\USUARIO\git\pid_20246__miercoles_grupo_02_parte1\src\main\java\com\gestion\tasking\model\AuthResponse.java
+C:\Users\USUARIO\git\pid_20246__miercoles_grupo_02_parte1\src\main\java\com\gestion\tasking\model\LoginRequest.java
+C:\Users\USUARIO\git\pid_20246__miercoles_grupo_02_parte1\src\main\java\com\gestion\tasking\repository\UserRepository.java
+C:\Users\USUARIO\git\pid_20246__miercoles_grupo_02_parte1\src\main\java\com\gestion\tasking\service\AuthService.java
+C:\Users\USUARIO\git\pid_20246__miercoles_grupo_02_parte1\src\main\java\com\gestion\tasking\service\TareaService.java
+C:\Users\USUARIO\git\pid_20246__miercoles_grupo_02_parte1\src\main\java\com\gestion\tasking\service\UserService.java
+C:\Users\USUARIO\git\pid_20246__miercoles_grupo_02_parte1\src\main\java\com\gestion\tasking\TaskingApplication.java
+C:\Users\USUARIO\git\pid_20246__miercoles_grupo_02_parte1\src\main\java\com\gestion\tasking\WebConfig.java
