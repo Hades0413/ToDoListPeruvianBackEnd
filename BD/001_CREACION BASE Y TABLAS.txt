@@ -1,0 +1,57 @@
+-- Crear la base de datos
+CREATE DATABASE BD_ToDoListPeruvian;
+USE BD_ToDoListPeruvian;
+
+-- Tabla de Usuarios
+CREATE TABLE tm_usuarios (
+    id_usuario INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+    nombre_usuario VARCHAR(50) NOT NULL,  
+    apellido_usuario VARCHAR(50) NOT NULL,
+    dni_usuario CHAR(8) UNIQUE NOT NULL,
+    username_usuario VARCHAR(100) UNIQUE NOT NULL, 
+    email_usuario VARCHAR(100) UNIQUE NOT NULL,
+    password_usuario VARCHAR(255) NOT NULL,            
+    fecha_creacion_usuario TIMESTAMP DEFAULT CURRENT_TIMESTAMP  
+);
+
+-- Tabla de Prioridad
+CREATE TABLE tm_prioridad (
+    id_tm_prioridad INT AUTO_INCREMENT PRIMARY KEY,    
+    nombre_tm_prioridad CHAR(5) UNIQUE NOT NULL
+);
+
+-- Tabla de Estado
+CREATE TABLE tm_estado (
+    id_tm_estado INT AUTO_INCREMENT PRIMARY KEY,     
+    nombre_tm_estado CHAR(10) UNIQUE NOT NULL
+);
+
+-- Tabla de Proyectos
+CREATE TABLE tg_proyectos (
+    id_tg_proyectos INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT,                            
+    nombre_tg_proyectos VARCHAR(120) NOT NULL,    
+    descripcion_tg_proyectos TEXT,                     
+    id_tm_prioridad INT DEFAULT 1,
+    fecha_vencimiento_tg_proyectos DATE,           
+    fecha_creacion_tg_proyectos TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_usuario) REFERENCES tm_usuarios(id_usuario) ON DELETE CASCADE,
+    FOREIGN KEY (id_tm_prioridad) REFERENCES tm_prioridad(id_tm_prioridad) ON DELETE CASCADE
+);
+
+-- Tabla de Tareas
+CREATE TABLE tg_tareas (
+    id_tg_tareas INT AUTO_INCREMENT PRIMARY KEY,     
+    id_tg_proyectos INT,          
+    id_usuario INT NOT NULL,                    
+    nombre_tg_tareas VARCHAR(120) UNIQUE NOT NULL,        
+    descripcion_tg_tareas TEXT,                    
+    id_tm_prioridad INT DEFAULT 1,
+    id_tm_estado INT DEFAULT 1,
+    fecha_vencimiento_tg_tareas DATE,            
+    fecha_creacion_tg_tareas TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_usuario) REFERENCES tm_usuarios(id_usuario) ON DELETE CASCADE,
+    FOREIGN KEY (id_tg_proyectos) REFERENCES tg_proyectos(id_tg_proyectos) ON DELETE CASCADE,
+    FOREIGN KEY (id_tm_prioridad) REFERENCES tm_prioridad(id_tm_prioridad) ON DELETE CASCADE,
+    FOREIGN KEY (id_tm_estado) REFERENCES tm_estado(id_tm_estado) ON DELETE CASCADE
+);

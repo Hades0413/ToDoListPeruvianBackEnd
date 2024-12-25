@@ -1,0 +1,44 @@
+
+-- Inserciones de usuarios
+INSERT INTO tm_usuarios (nombre_usuario, apellido_usuario, dni_usuario, username_usuario, email_usuario, password_usuario)
+VALUES
+    ('hades', '0413', '12345678', 'hades0413', 'xxx@hotmail.com', '12345678'),
+    ('María', 'Gómez', '23456789', 'mariag', 'maria.gomez@correo.com', 'password456'),
+    ('Carlos', 'Rodríguez', '34567890', 'carlosr', 'carlos.rodriguez@correo.com', 'password789');
+
+-- Inserciones de prioridades
+INSERT INTO tm_prioridad (nombre_tm_prioridad)
+VALUES
+    ('Baja'),
+    ('Media'),
+    ('Alta');
+
+-- Inserciones de estados
+INSERT INTO tm_estado (nombre_tm_estado)
+VALUES
+    ('Pendiente'),
+    ('Inactivo'),
+    ('Activo');
+
+-- Inserciones de proyectos
+INSERT INTO tg_proyectos (id_usuario, nombre_tg_proyectos, descripcion_tg_proyectos, id_tm_prioridad, fecha_vencimiento_tg_proyectos)
+VALUES
+    (1, 'Proyecto de Desarrollo Web', 'Desarrollo de una nueva página web corporativa', 2, '2024-12-15'),
+    (2, 'Reestructuración de Base de Datos', 'Mejora de la estructura y optimización de bases de datos', 3, '2025-01-10');
+    
+-- Llamada de ejemplo para registrar la tarea
+CALL RegistrarTarea(
+    1,                              -- ID del proyecto
+    2,                              -- ID del usuario (debe existir en la tabla tm_usuarios)
+    'Diseño de la Interfaz de UsuarioOO',     -- Nombre de la tarea
+    'Se debe desarrollar un proyecto en Spring que tenga los métodos de registrar usuarioOO', -- Descripción de la tarea
+    2,                              -- Prioridad (Media)
+    3,                              -- Estado (Activo)
+    '2024-12-10'                    -- Fecha de vencimiento
+);
+
+
+-- Consultas para verificar los datos
+SELECT * FROM tm_usuarios;
+SELECT * FROM tg_proyectos;
+SELECT * FROM tg_tareas;

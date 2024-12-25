@@ -1,0 +1,55 @@
+
+-- Procedure RegistrarTarea
+DELIMITER $$
+CREATE PROCEDURE RegistrarTarea(
+    IN p_id_tg_proyectos INT,          
+    IN p_id_usuario INT,               
+    IN p_nombre_tg_tareas VARCHAR(120), 
+    IN p_descripcion_tg_tareas TEXT,   
+    IN p_id_tm_prioridad INT,          
+    IN p_id_tm_estado INT,             
+    IN p_fecha_vencimiento DATE        
+)
+BEGIN
+    -- Validar si el usuario existe
+    IF NOT EXISTS (
+        SELECT 1 
+        FROM tm_usuarios
+        WHERE id_usuario = p_id_usuario
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error: El ID de usuario no existe.';
+    END IF;
+    
+    -- Validar si ya existe una tarea con el mismo nombre en el mismo proyecto
+    IF EXISTS (
+        SELECT 1 
+        FROM tg_tareas
+        WHERE id_tg_proyectos = p_id_tg_proyectos
+          AND nombre_tg_tareas = p_nombre_tg_tareas
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error: Ya existe una tarea con el mismo nombre en este proyecto.';
+    ELSE
+        -- Insertar la nueva tarea si no hay duplicados
+        INSERT INTO tg_tareas (
+            id_tg_proyectos,
+            id_usuario,                    
+            nombre_tg_tareas,
+            descripcion_tg_tareas,
+            id_tm_prioridad,
+            id_tm_estado,
+            fecha_vencimiento_tg_tareas
+        ) VALUES (
+            p_id_tg_proyectos,
+            p_id_usuario,                  
+            p_nombre_tg_tareas,
+            p_descripcion_tg_tareas,
+            COALESCE(p_id_tm_prioridad, 1),
+            COALESCE(p_id_tm_estado, 1),
+            p_fecha_vencimiento
+        );
+    END IF;
+END$$
+DELIMITER ;
+
