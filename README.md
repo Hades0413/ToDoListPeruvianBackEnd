@@ -52,9 +52,9 @@ Este proyecto es una API REST para la gestión de tareas, que permite crear nuev
 
 ```json
 {
-	"email" :"jesus@hotmail.com",
-	"name" : "jesus",
-	"password" : "123"
+	"email" :"yara@hotmail.com",
+	"name" : "yara",
+	"password" : "12345678"
 }
 ```
 
