@@ -146,6 +146,16 @@ public class TareaController {
                         .body(new AuthResponse(400, "La fecha de vencimiento es obligatoria."));
             }
 
+            // Actualización de la tarea
+            Tarea actualizarTarea = tareaService.actualizarTarea(
+                    id,
+                    tarea.getNombre(),
+                    tarea.getDescripcion(),
+                    tarea.getPrioridad(),
+                    tarea.getEstado(),
+                    tarea.getFechaVencimiento()
+            );
+
             // Respuesta de éxito
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new AuthResponse(200, "Actualización exitosa"));

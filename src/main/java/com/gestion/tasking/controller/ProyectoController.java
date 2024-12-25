@@ -3,6 +3,7 @@ package com.gestion.tasking.controller;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ import com.gestion.tasking.entity.Prioridad;
 import com.gestion.tasking.entity.Proyecto;
 import com.gestion.tasking.entity.User;
 import com.gestion.tasking.repository.UserRepository;
+import com.gestion.tasking.service.PrioridadService;
 import com.gestion.tasking.service.ProyectoService;
 
 @RestController
@@ -34,6 +36,9 @@ public class ProyectoController {
     @Autowired
     private ProyectoService proyectoService;
 
+    @Autowired
+    private PrioridadService prioridadService;
+    
     @Autowired
     private UserRepository userRepository;
 
