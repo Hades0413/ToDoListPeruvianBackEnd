@@ -116,18 +116,11 @@ H2Dialect: Base de datos utilizada
 Postman: Herramienta para probar la API
 
 ## Personas Contribuyentes
-Jesus Salazar Lazo - Desarrollador Principal
+Hades413 - Desarrollador Principal
 
 
 ## Personas Desarrolladoras del Proyecto
-Jesus Salazar Lazo: Desarrollador Principal
-
-##
-Pablo Sierra Torres 
-
-#Leonardo Manuel Quezada Trujillo : Desarrollador Principal
-
-#Jorge Fabrizio Olano Farfan 26 : Desarrollador Principal
+Hades413: Desarrollador Principal
 
 ## Licencia
 Este proyecto está bajo la Licencia MIT. Para más detalles, consulta el archivo LICENSE.
