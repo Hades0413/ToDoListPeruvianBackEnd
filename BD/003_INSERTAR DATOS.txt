@@ -2,9 +2,7 @@
 -- Inserciones de usuarios
 INSERT INTO tm_usuarios (nombre_usuario, apellido_usuario, dni_usuario, username_usuario, email_usuario, password_usuario)
 VALUES
-    ('hades', '0413', '12345678', 'hades0413', 'xxx@hotmail.com', '12345678'),
-    ('María', 'Gómez', '23456789', 'mariag', 'maria.gomez@correo.com', 'password456'),
-    ('Carlos', 'Rodríguez', '34567890', 'carlosr', 'carlos.rodriguez@correo.com', 'password789');
+    ('hades', '0413', '12345678', 'hades0413', 'xxx@hotmail.com', '$2a$10$C5hoQQJhKJbrjPzZ5IDn2OTWLcKyj1NG9koChrq8irM5NIyb8aQYi');
 
 -- Inserciones de prioridades
 INSERT INTO tm_prioridad (nombre_tm_prioridad)
