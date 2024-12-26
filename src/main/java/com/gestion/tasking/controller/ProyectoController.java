@@ -3,7 +3,6 @@ package com.gestion.tasking.controller;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,37 +25,35 @@ import com.gestion.tasking.entity.Prioridad;
 import com.gestion.tasking.entity.Proyecto;
 import com.gestion.tasking.entity.User;
 import com.gestion.tasking.repository.UserRepository;
-import com.gestion.tasking.service.PrioridadService;
 import com.gestion.tasking.service.ProyectoService;
 
 @RestController
 @RequestMapping("/api/proyectos")
 public class ProyectoController {
 
+    private static final Logger logger = LoggerFactory.getLogger(ProyectoController.class);
+
     @Autowired
     private ProyectoService proyectoService;
 
     @Autowired
-    private PrioridadService prioridadService;
-    
-    @Autowired
     private UserRepository userRepository;
-
-    private static final Logger logger = LoggerFactory.getLogger(ProyectoController.class);
 
     @PostMapping("/user")
     public ResponseEntity<?> obtenerProyectosPorUsuario(@RequestBody Map<String, Integer> request) {
         Integer usuarioId = request.get("Id");
         if (usuarioId == null) {
             logger.warn("No se proporcionó un ID de usuario en la solicitud");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "El ID de usuario es requerido"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("message", "El ID de usuario es requerido"));
         }
 
         Optional<User> optionalUsuario = userRepository.findById(usuarioId);
 
         if (optionalUsuario.isEmpty()) {
             logger.warn("El usuario con ID {} no existe", usuarioId);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "El usuario que se intenta buscar no existe"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "El usuario que se intenta buscar no existe"));
         }
 
         User usuario = optionalUsuario.get();
@@ -64,7 +61,8 @@ public class ProyectoController {
 
         if (proyectos.isEmpty()) {
             logger.info("El usuario con ID {} no tiene proyectos activos", usuarioId);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Este usuario no tiene proyectos activos"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "Este usuario no tiene proyectos activos"));
         }
 
         // Crear la respuesta con los datos necesarios y omitir detalles del usuario
@@ -90,18 +88,15 @@ public class ProyectoController {
         return ResponseEntity.ok(proyectosResponse);
     }
 
-
-
-    
-    
-    
     @GetMapping("/{idProyecto}")
-    public ResponseEntity<?> listarProyectoPorId(@PathVariable(value = "idProyecto", required = false) Integer idProyecto) {
+    public ResponseEntity<?> listarProyectoPorId(
+            @PathVariable(required = false) Integer idProyecto) {
         // Validación: si no se proporciona idProyecto
         if (idProyecto == null || idProyecto <= 0) {
             logger.warn("Falta el ID del proyecto en la solicitud");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of("message", "Falta el ID del proyecto. Se debe introducir un ID de proyecto válido en la URL."));
+                    .body(Map.of("message",
+                            "Falta el ID del proyecto. Se debe introducir un ID de proyecto válido en la URL."));
         }
 
         Optional<Proyecto> optionalProyecto = proyectoService.findById(idProyecto);
@@ -117,19 +112,17 @@ public class ProyectoController {
 
         // Mapear el proyecto a un HashMap para la salida
         Map<String, Object> response = Map.of(
-            "idUsuario", proyecto.getUsuario() != null ? proyecto.getUsuario().getId() : "No disponible",
-            "nombre", proyecto.getNombreTgProyectos(),
-            "descripcion", proyecto.getDescripcionTgProyectos(),
-            "prioridad", proyecto.getPrioridad() != null ? proyecto.getPrioridad().getNombrePrioridad() : "No definida",
-            "fechaCreacion", proyecto.getFechaCreacionTgProyectos(),
-            "fechaVencimiento", proyecto.getFechaVencimientoTgProyectos()
-        );
+                "idUsuario", proyecto.getUsuario() != null ? proyecto.getUsuario().getId() : "No disponible",
+                "nombre", proyecto.getNombreTgProyectos(),
+                "descripcion", proyecto.getDescripcionTgProyectos(),
+                "prioridad",
+                proyecto.getPrioridad() != null ? proyecto.getPrioridad().getNombrePrioridad() : "No definida",
+                "fechaCreacion", proyecto.getFechaCreacionTgProyectos(),
+                "fechaVencimiento", proyecto.getFechaVencimientoTgProyectos());
 
         return ResponseEntity.ok(response);
     }
 
-
-    
     @PostMapping("/registrar")
     public ResponseEntity<?> registrarProyecto(@RequestBody Map<String, Object> input) {
         try {
@@ -151,7 +144,8 @@ public class ProyectoController {
             proyecto.setNombreTgProyectos((String) input.get("nombreProyecto"));
             proyecto.setDescripcionTgProyectos((String) input.get("descripcionProyecto"));
 
-            // Generar automáticamente la fecha de creación con la hora actual si no se envía en el JSON
+            // Generar automáticamente la fecha de creación con la hora actual si no se
+            // envía en el JSON
             LocalDateTime fechaCreacion = LocalDateTime.now(); // Usa la fecha y hora actual
             proyecto.setFechaCreacionTgProyectos(fechaCreacion);
 
@@ -180,7 +174,7 @@ public class ProyectoController {
             Proyecto nuevoProyecto = proyectoService.agregarProyecto(proyecto);
 
             // Crear la respuesta en el formato deseado usando LinkedHashMap
-            Map<String, Object> response = new LinkedHashMap<>();  // Mantener ordenado el formato de salida
+            Map<String, Object> response = new LinkedHashMap<>(); // Mantener ordenado el formato de salida
             response.put("idUsuario", nuevoProyecto.getUsuario().getId());
             response.put("idProyecto", nuevoProyecto.getIdTgProyectos());
             response.put("nombreProyecto", nuevoProyecto.getNombreTgProyectos());
@@ -204,7 +198,4 @@ public class ProyectoController {
         }
     }
 
-
-
-    
 }
