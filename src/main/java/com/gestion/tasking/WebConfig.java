@@ -10,7 +10,9 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**") 
-                .allowedOrigins("http://localhost:5173") 
+                // Permite solicitudes desde localhost (para desarrollo)
+                .allowedOrigins("http://localhost:5173",
+                        "https://to-do-list-peruvian-git-main-hades0413-pluton.vercel.app")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(false);

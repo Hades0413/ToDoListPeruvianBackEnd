@@ -1,0 +1,25 @@
+# Ignorar archivos generados por el compilador y la construcción del proyecto
+/target/
+/bin/
+
+/.idea/               # Ignorar directorios de configuración de IDE (por ejemplo, IntelliJ IDEA)
+/.vscode/             # Ignorar configuraciones de VS Code
+
+# Ignorar archivos de configuración del proyecto
+.classpath
+.project
+.factorypath
+.settings/
+
+# Ignorar archivos de logs de git
+.git/*
+!.gitignore           # Pero no ignores el archivo .gitignore
+
+# Ignorar archivos temporales del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Ignorar archivos específicos de maven y otros artefactos temporales
+/mvnw
+/mvnw.cmd
+/pom.xml~            # Ignorar cualquier archivo temporal de pom.xml
