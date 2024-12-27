@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +31,8 @@ import com.gestion.tasking.service.TareaService;
 @RestController
 @RequestMapping("/api/tareas")
 public class TareaController {
+
+    private static final Logger log = LoggerFactory.getLogger(TareaController.class);
 
     @Autowired
     private TareaService tareaService;
@@ -62,22 +66,25 @@ public class TareaController {
                         .body(new AuthResponse(400, "La fecha de vencimiento es obligatoria."));
             }
 
-            // Llamar al servicio para registrar la tarea, ahora incluyendo el idUsuario
-            Tarea nuevaTarea = tareaService.registrarTarea(
+            // Registrar la nueva tarea
+            tareaService.registrarTarea(
                     tarea.getIdProyecto(),
-                    tarea.getIdUsuario(), // Asegúrate de que `idUsuario` esté presente en el objeto Tarea
+                    tarea.getIdUsuario(),
                     tarea.getNombre(),
                     tarea.getDescripcion(),
                     tarea.getPrioridad(),
                     tarea.getEstado(),
                     tarea.getFechaVencimiento());
 
-            // Retornar la tarea registrada
-            return ResponseEntity.ok(nuevaTarea);
+            // Respuesta con código 200 y mensaje personalizado
+            AuthResponse response = new AuthResponse(200, "La tarea ha sido registrada correctamente.");
+            return ResponseEntity.ok(response);
+
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AuthResponse(400, e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new AuthResponse(500, "Ocurrió un error inesperado: " + e.getMessage()));
         }
     }
 
@@ -114,40 +121,51 @@ public class TareaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> actualizarTarea(@PathVariable int id, @RequestBody Tarea tarea) throws Exception {
+    public ResponseEntity<?> actualizarTarea(@PathVariable int id, @RequestBody Tarea tarea) {
         List<String> errores = new ArrayList<>();
 
-        // Verificar si la tarea existe
-        if (!tareaService.existeTarea(id)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new AuthResponse(404, "La tarea con el ID " + id + " no existe."));
-        }
-
-        // Validaciones de los campos obligatorios
-        if (tarea.getNombre() == null || tarea.getNombre().isEmpty()) {
-            errores.add("El nombre de la tarea es obligatorio.");
-        }
-        if (tarea.getDescripcion() == null || tarea.getDescripcion().isEmpty()) {
-            errores.add("La descripción de la tarea es obligatoria.");
-        }
-        if (tarea.getPrioridad() == null) {
-            errores.add("La prioridad de la tarea es obligatoria.");
-        }
-        if (tarea.getEstado() == null) {
-            errores.add("El estado de la tarea es obligatorio.");
-        }
-        if (tarea.getFechaVencimiento() == null) {
-            errores.add("La fecha de vencimiento es obligatoria.");
-        }
-
-        // Si hay errores de validación, retornamos todos los errores encontrados
-        if (!errores.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new AuthResponse(400, String.join(" ", errores)));
+        try {
+            if (!tareaService.existeTarea(id)) {
+                log.warn("Tarea con ID {} no encontrada.", id);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new AuthResponse(404, "La tarea con el ID " + id + " no existe."));
+            }
+        } catch (Exception e) {
+            log.error("Error al verificar existencia de la tarea con ID {}: {}", id, e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new AuthResponse(500, "Error al verificar la existencia de la tarea."));
         }
 
         try {
-            // Actualización de la tarea
+            if (tarea.getNombre() == null || tarea.getNombre().isEmpty()) {
+                errores.add("El nombre de la tarea es obligatorio.");
+            }
+            if (tarea.getDescripcion() == null || tarea.getDescripcion().isEmpty()) {
+                errores.add("La descripción de la tarea es obligatoria.");
+            }
+            if (tarea.getPrioridad() == null) {
+                errores.add("La prioridad de la tarea es obligatoria.");
+            }
+            if (tarea.getEstado() == null) {
+                errores.add("El estado de la tarea es obligatorio.");
+            }
+            if (tarea.getFechaVencimiento() == null) {
+                errores.add("La fecha de vencimiento es obligatoria.");
+            }
+
+            // Si hay errores de validación, retornamos todos los errores encontrados
+            if (!errores.isEmpty()) {
+                log.warn("Errores de validación al actualizar tarea con ID {}: {}", id, errores);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(new AuthResponse(400, String.join(" ", errores)));
+            }
+        } catch (Exception e) {
+            log.error("Error en la validación de la tarea con ID {}: {}", id, e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new AuthResponse(500, "Error en la validación de los datos de la tarea."));
+        }
+
+        try {
             tareaService.actualizarTarea(
                     id,
                     tarea.getNombre(),
@@ -156,14 +174,15 @@ public class TareaController {
                     tarea.getEstado(),
                     tarea.getFechaVencimiento());
 
-            // Respuesta de éxito
+            log.info("Tarea con ID {} actualizada exitosamente.", id);
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new AuthResponse(200, "Actualización exitosa"));
-
         } catch (IllegalArgumentException e) {
+            log.error("Datos inválidos al actualizar tarea con ID {}: {}", id, e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new AuthResponse(400, "Datos inválidos: " + e.getMessage()));
         } catch (Exception e) {
+            log.error("Error inesperado al actualizar tarea con ID {}: {}", id, e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new AuthResponse(500, "Ocurrió un error inesperado en el servidor"));
         }

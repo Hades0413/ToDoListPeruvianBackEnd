@@ -22,12 +22,12 @@ VALUES
 INSERT INTO tg_proyectos (id_usuario, nombre_tg_proyectos, descripcion_tg_proyectos, id_tm_prioridad, fecha_vencimiento_tg_proyectos)
 VALUES
     (1, 'Proyecto de Desarrollo Web', 'Desarrollo de una nueva página web corporativa', 2, '2024-12-15'),
-    (2, 'Reestructuración de Base de Datos', 'Mejora de la estructura y optimización de bases de datos', 3, '2025-01-10');
+    (1, 'Reestructuración de Base de Datos', 'Mejora de la estructura y optimización de bases de datos', 3, '2025-01-10');
     
 -- Llamada de ejemplo para registrar la tarea
 CALL RegistrarTarea(
     1,                              -- ID del proyecto
-    2,                              -- ID del usuario (debe existir en la tabla tm_usuarios)
+    1,                              -- ID del usuario (debe existir en la tabla tm_usuarios)
     'Diseño de la Interfaz de UsuarioOO',     -- Nombre de la tarea
     'Se debe desarrollar un proyecto en Spring que tenga los métodos de registrar usuarioOO', -- Descripción de la tarea
     2,                              -- Prioridad (Media)

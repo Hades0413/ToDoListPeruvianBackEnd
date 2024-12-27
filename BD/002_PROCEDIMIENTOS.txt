@@ -53,3 +53,64 @@ BEGIN
 END$$
 DELIMITER ;
 
+
+DELIMITER $$
+CREATE PROCEDURE actualizar_tarea (
+    IN p_id_tg_tareas INT,             -- ID de la tarea a actualizar
+    IN p_nombre_tg_tareas VARCHAR(120),-- Nuevo nombre de la tarea
+    IN p_descripcion_tg_tareas TEXT,   -- Nueva descripción de la tarea
+    IN p_id_tm_prioridad INT,          -- Nueva prioridad
+    IN p_id_tm_estado INT,             -- Nuevo estado
+    IN p_fecha_vencimiento_tg_tareas DATE -- Nueva fecha de vencimiento
+)
+BEGIN
+    -- Validar si el nuevo nombre ya está siendo usado por otra tarea en el mismo proyecto
+    IF EXISTS (
+        SELECT 1
+        FROM tg_tareas
+        WHERE id_tg_proyectos = (SELECT id_tg_proyectos FROM tg_tareas WHERE id_tg_tareas = p_id_tg_tareas)
+          AND nombre_tg_tareas = p_nombre_tg_tareas
+          AND id_tg_tareas != p_id_tg_tareas -- Excluir la tarea actual
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error: Ya existe una tarea con el mismo nombre en este proyecto.';
+    ELSE
+        -- Actualizar la tarea si no hay duplicados
+        UPDATE tg_tareas
+        SET 
+            nombre_tg_tareas = p_nombre_tg_tareas,
+            descripcion_tg_tareas = p_descripcion_tg_tareas,
+            id_tm_prioridad = COALESCE(p_id_tm_prioridad, id_tm_prioridad),
+            id_tm_estado = COALESCE(p_id_tm_estado, id_tm_estado),
+            fecha_vencimiento_tg_tareas = COALESCE(p_fecha_vencimiento_tg_tareas, fecha_vencimiento_tg_tareas)
+        WHERE id_tg_tareas = p_id_tg_tareas;
+    END IF;
+END$$
+DELIMITER ;
+
+
+CALL actualizar_tarea(1, 'Diseño de la Interfaz de Usuario', 'Hacer cosas para la tarea 3', 2, 3, '2024-12-31');
+
+DELIMITER $$
+CREATE PROCEDURE eliminar_tarea (
+    IN p_id_tg_tareas INT
+)
+BEGIN
+    -- Validar si la tarea existe antes de intentar eliminarla
+    IF NOT EXISTS (
+        SELECT 1 FROM tg_tareas WHERE id_tg_tareas = p_id_tg_tareas
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error: La tarea no existe.';
+    ELSE
+        -- Eliminar la tarea
+        DELETE FROM tg_tareas
+        WHERE id_tg_tareas = p_id_tg_tareas;
+    END IF;
+END$$
+DELIMITER ;
+
+
+CALL eliminar_tarea(114);
+
+
