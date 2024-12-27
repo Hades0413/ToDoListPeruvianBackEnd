@@ -12,7 +12,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/api/**") 
                 // Permite solicitudes desde localhost (para desarrollo)
                 .allowedOrigins("http://localhost:5173",
-                        "https://to-do-list-peruvian-git-main-hades0413-pluton.vercel.app")
+                        "https://to-do-list-peruvian-git-main-hades0413-pluton.vercel.app","https://to-do-list-peruvian.vercel.app")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(false);

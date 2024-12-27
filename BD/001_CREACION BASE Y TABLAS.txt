@@ -30,7 +30,7 @@ CREATE TABLE tm_estado (
 CREATE TABLE tg_proyectos (
     id_tg_proyectos INT AUTO_INCREMENT PRIMARY KEY,
     id_usuario INT,                            
-    nombre_tg_proyectos VARCHAR(120) NOT NULL,    
+    nombre_tg_proyectos VARCHAR(120) UNIQUE NOT NULL,    
     descripcion_tg_proyectos TEXT,                     
     id_tm_prioridad INT DEFAULT 1,
     fecha_vencimiento_tg_proyectos DATE,           
